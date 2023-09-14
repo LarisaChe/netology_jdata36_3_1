@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.netology.service.ProductService;
 
-import java.sql.SQLException;
+import java.util.List;
 
 @RestController
 public class ProductController {
@@ -17,7 +17,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/fetch-product")
-    public String getProducts(@RequestParam("name") String name) throws SQLException {
+    public List<String> getProducts(@RequestParam("name") String name) {
         return service.getProducts(name);
     }
 

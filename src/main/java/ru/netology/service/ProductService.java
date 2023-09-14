@@ -1,9 +1,10 @@
 package ru.netology.service;
 
 import org.springframework.stereotype.Service;
+import ru.netology.model.Customer;
 import ru.netology.repository.ProductRepository;
 
-import java.sql.SQLException;
+import java.util.List;
 
 @Service
 public class ProductService {
@@ -14,11 +15,11 @@ public class ProductService {
         this.repository = repository;
     }
 
-    public String getProducts(String name) throws SQLException {
+    public List<String> getProducts(String name) {
         return repository.getProducts(name);
     }
 
-    public String getCustomes() throws SQLException {
+    public List<Customer> getCustomes() {
         return repository.getCustomes();
     }
 }

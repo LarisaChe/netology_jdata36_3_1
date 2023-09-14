@@ -1,18 +1,14 @@
 package ru.netology.repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.netology.model.Customer;
 
-import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,12 +26,12 @@ public class ProductRepository {
         this.query = read("query01.sql");
     }
 
-    public String getProducts(String name) {
+    public List<String> getProducts(String name) {
         Map<String, String> params = new HashMap<>();
         params.put("paramName", name);
         List<String> products = namedParameterJdbcTemplate.queryForList(query, params, String.class);
         //products.forEach(System.out::println);
-        return products.toString();
+        return products;
     }
 
     private static String read(String scriptFileName) {
@@ -47,7 +43,7 @@ public class ProductRepository {
         }
     }
 
-    public String getCustomes()   {
+    public List<Customer> getCustomes() {
         String q = "select * from jdata36.customers";
         List<Customer> customers = namedParameterJdbcTemplate.query(q, (resultSet, rowNum) -> {
             int id = resultSet.getInt("id");
@@ -58,6 +54,6 @@ public class ProductRepository {
             return new Customer(id, name, surname, age, phone_number);
         });
         customers.forEach(System.out::println);
-        return customers.toString();
+        return customers;
     }
 }
