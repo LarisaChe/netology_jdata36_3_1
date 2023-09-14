@@ -1,13 +1,24 @@
 package ru.netology.model;
 
+import jakarta.persistence.*;
+
 import java.util.Date;
 
+@Entity
 public class Order {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column
     private Date dat;
+    @ManyToOne(targetEntity = Customer.class, fetch = FetchType.EAGER)
     private int customer_id;
+    @Column
     private String product_name;
+    @Column
     private float amount;
+
+    public Order() {}
 
     public Order(int id, Date dat, int customer_id, String product_name, float amount) {
         this.id = id;

@@ -15,8 +15,8 @@ public class ProductService {
         this.repository = repository;
     }
 
-    public List<String> getProducts(String name) {
-        return repository.getProducts(name);
+    public List<String> getCustomerProducts(String name) {
+        return repository.getCustomerProducts(name);
     }
 
     public List<Customer> getCustomes() {

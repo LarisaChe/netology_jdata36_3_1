@@ -1,7 +1,8 @@
 package ru.netology.repository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.netology.model.Customer;
 
@@ -9,29 +10,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
 public class ProductRepository {
 
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    @PersistenceContext
+    private final EntityManager entityManager;
+    private final String queryStr;
 
-    private final String query;
-
-    public ProductRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-        this.query = read("query01.sql");
-    }
-
-    public List<String> getProducts(String name) {
-        Map<String, String> params = new HashMap<>();
-        params.put("paramName", name);
-        List<String> products = namedParameterJdbcTemplate.queryForList(query, params, String.class);
-        //products.forEach(System.out::println);
-        return products;
+    public ProductRepository(EntityManager entityManager) {
+        this.entityManager = entityManager;
+        this.queryStr = read("fetch-product.sql");
     }
 
     private static String read(String scriptFileName) {
@@ -43,17 +34,18 @@ public class ProductRepository {
         }
     }
 
+    public List<String> getCustomerProducts(String customerName) {
+        List<String> products = (List<String>) entityManager.createNativeQuery(queryStr, String.class)
+                .setParameter("paramName", customerName)
+                .getResultList();
+        //products.forEach(System.out::println);
+        return products;
+    }
+
     public List<Customer> getCustomes() {
         String q = "select * from jdata36.customers";
-        List<Customer> customers = namedParameterJdbcTemplate.query(q, (resultSet, rowNum) -> {
-            int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            String surname = resultSet.getString("surname");
-            int age = resultSet.getInt("age");
-            String phone_number = resultSet.getString("phone_number");
-            return new Customer(id, name, surname, age, phone_number);
-        });
-        customers.forEach(System.out::println);
+        List<Customer> customers = entityManager.createNativeQuery(q, Customer.class).getResultList();
+        //customers.forEach(System.out::println);
         return customers;
     }
 }

@@ -1,11 +1,22 @@
 package ru.netology.model;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Customer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column
     private String name;
+    @Column
     private String surname;
+    @Column
     private int age;
+    @Column
     private String phone_number;
+
+    public Customer() {}
 
     public Customer(int id, String name, String surname, int age, String phone_number) {
         this.id = id;
